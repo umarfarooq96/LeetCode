@@ -4,7 +4,7 @@ import java.util.Comparator;
 public class MergeIntervals {
 
     public static void main(String[] args) {
-        int[][] intervals = { { 1, 4 }, { 4, 5 } };
+        int[][] intervals = { { 1, 15 }, { 2, 5 }, { 3, 6 }, { 7, 10 } };
         System.out.println(Arrays.toString(merge(intervals)));
     }
 

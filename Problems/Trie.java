@@ -1,22 +1,14 @@
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-
 class Trie {
 
-    TrieNode[] headNodes;
+    TrieNode root = null;
 
-    /*
-    Trie = tree that branches on characters
-    */
-
-    /**
-     * Initialize your data structure here.
-     */
     public Trie() {
-        this.headNodes = new TrieNode[26];
+        /*
+        root will be our entry point for any char
+        */
+        this.root = new TrieNode();
     }
+
 
     public static void main(String[] args) {
         Trie trie = new Trie();
@@ -33,93 +25,58 @@ class Trie {
      * Inserts a word into the trie.
      */
     public void insert(String word) {
-        TrieNode curNode  = headNodes[word.charAt(0) - 'a'];
-        int      curIndex = 0;
 
-        if (curNode == null) {
-            curNode = new TrieNode(word.charAt(curIndex));
-            headNodes[word.charAt(curIndex) - 'a'] = curNode;
-        }
-
-        curIndex++;
-
-        while (curIndex != word.length()) {
-            if (curNode.childNodeOf(word.charAt(curIndex)) != null) {
-                curNode = curNode.childNodeOf(word.charAt(curIndex));
-            } else {
-                TrieNode newNode = new TrieNode(word.charAt(curIndex));
-                curNode.childNodes[word.charAt(curIndex) - 'a'] = newNode;
-                curNode = newNode;
+        TrieNode previousChar = root;
+        for (int i = 0; i < word.length(); i++) {
+            char curChar = word.charAt(i);
+            if (previousChar.children[curChar - 'a'] == null) {
+                TrieNode n = new TrieNode(curChar);
+                previousChar.children[curChar - 'a'] = n;
             }
-            curIndex++;
+            previousChar = previousChar.children[curChar - 'a'];
         }
-
-        curNode.terminating = true;
+        //previousChar is now our last character
+        previousChar.terminating = true;
     }
 
-    /**
-     * Returns if the word is in the trie.
-     */
+    /** Returns if the word is in the trie. */
     public boolean search(String word) {
-        TrieNode curNode  = headNodes[word.charAt(0) - 'a'];
-        int      curIndex = 1;
-
-        while (curNode != null && curIndex != word.length()) {
-            System.out.println(curNode);
-            curNode = curNode.childNodeOf(word.charAt(curIndex));
-            curIndex++;
+        TrieNode curNode = root;
+        for (int i = 0; i < word.length(); i++) {
+            char curChar = word.charAt(i);
+            if (curNode.children[curChar - 'a'] == null) {
+                return false;
+            }
         }
-
         return curNode.terminating;
     }
 
     /**
      * Returns if there is any word in the trie that starts with the given prefix.
      */
-    public boolean startsWith(String prefix) {
-        TrieNode curNode  = headNodes[prefix.charAt(0) - 'a'];
-        int      curIndex = 1;
-
-        while (curNode != null && curIndex < prefix.length()) {
-            curNode = curNode.childNodeOf(prefix.charAt(curIndex));
-            curIndex++;
-        }
-
-        Queue<TrieNode> nodes = new ArrayDeque<>();
-        nodes.add(curNode);
-        while (!nodes.isEmpty()) {
-            TrieNode cur = nodes.poll();
-            if (cur.terminating) {
-                return true;
+    public boolean startsWith(String word) {
+        TrieNode curNode = root;
+        for (int i = 0; i < word.length(); i++) {
+            char curChar = word.charAt(i);
+            if (curNode.children[curChar - 'a'] == null) {
+                return false;
             }
-            nodes.addAll(cur.existingChildren());
         }
-
-        return false;
+        return true;
     }
 
     class TrieNode {
 
-        boolean    terminating = false;
-        Character  character;
-        TrieNode[] childNodes  = new TrieNode[26];
+        public char    thisChar;
+        public boolean terminating;
+        TrieNode[] children = new TrieNode[26];
 
-        public TrieNode(char c) {
-            this.character = c;
+        TrieNode(char c) {
+            this.thisChar = c;
         }
 
-        TrieNode childNodeOf(char character) {
-            return childNodes[character - 'a'];
-        }
+        TrieNode() {
 
-        List<TrieNode> existingChildren() {
-            List<TrieNode> ans = new ArrayList<>();
-            for (int i = 0; i < childNodes.length; i++) {
-                if (childNodes[i] != null) {
-                    ans.add(childNodes[i]);
-                }
-            }
-            return ans;
         }
     }
 }

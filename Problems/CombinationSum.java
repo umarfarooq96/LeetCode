@@ -38,7 +38,6 @@ public class CombinationSum {
                     that is, we tried all combinations with 2's.
                  */
                 cur.add(candidates[i]);
-                System.out.println(cur);
                 combinationSum(result, cur, candidates, target - candidates[i], i);
                 cur.remove(cur.size() - 1);
             }

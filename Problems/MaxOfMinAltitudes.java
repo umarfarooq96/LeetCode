@@ -23,8 +23,8 @@ public class MaxOfMinAltitudes {
             maxPath = Integer.max(maxPath, curPath.smallest);
 
             if (curPath.i + 1 < matrix.length) {
-                int valGoingRight = matrix[curPath.i + 1][curPath.j];
-                queue.add(new PathNode(curPath.i + 1, curPath.j, Integer.min(curPath.smallest, valGoingRight)));
+                int valGoingDown = matrix[curPath.i + 1][curPath.j];
+                queue.add(new PathNode(curPath.i + 1, curPath.j, Integer.min(curPath.smallest, valGoingDown)));
             }
             if (curPath.j + 1 < matrix[0].length) {
                 int valGoingRight = matrix[curPath.i][curPath.j + 1];
